@@ -14,12 +14,11 @@ class Task{
             group = _group;
             complete = false;
         }
-
         // construct the task from the string
         static Task* fromString(std::string str){
             std::string taskName;
             std::string taskGroup;
-            bool complete = ( str[0] == (char) *"1") ? true : false;
+            bool complete = (str[0] == (char) *"1") ? true : false;
             int delimPos = str.find('@'); // the location of the @ delimeter for task groups
             if(delimPos > 0){
                 // parse the task's name and group based on the @ delimeter
@@ -30,9 +29,11 @@ class Task{
                 taskName = str.substr(1, str.length()-1);
             }
             Task* task = new Task(taskName, taskGroup);
+            if (complete){
+                task->markComplete();
+            }
             return task;
         }
-
         // converts the task into a string to be saved into the ToDo file
         std::string toString(){
             std::string groupStr = (group != "") ? std::format("@{}", group) : "";
