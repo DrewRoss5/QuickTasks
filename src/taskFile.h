@@ -20,7 +20,7 @@ class TaskFile{
             taskList.push_back(newTask);
         }
         // deletes a task given its index
-        void deleteTask(int taskIndex){
+        void removeTask(int taskIndex){
             taskList.erase(taskList.begin()+taskIndex);
         }
         // marks a task complete given its index
@@ -33,9 +33,9 @@ class TaskFile{
             std::string groupName;
             std::vector<int>::size_type size = taskList.size();
             // ensure that the task list has been initalized
-            if(taskList.size() > 0){
+            if(size > 0){
+                std::cout << "Tasks:\n";
                 for (int i = 0; i < size; i++){
-                    std::cout << "Tasks:\n";
                     task = taskList[i];
                     std::string completeChar = (task->getComplete()) ? "✔" : "✖";
                     groupName = task->getGroup();
@@ -85,7 +85,8 @@ class TaskFile{
                 delete(task);
             }
         }
-
-
-
+        // getter functions
+        int getTaskCount(){
+            return taskList.size();
+        }
 };
