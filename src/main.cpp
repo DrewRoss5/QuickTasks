@@ -40,6 +40,7 @@ int parseArgs(char* argv[], int argc, int startPos, std::map<std::string, std::s
     }
     return 0;
 }
+
 // takes a task id, the taskFile, and an opperation, validates the task ID, and runs the opperation if it is valid
 void callTaskOpperation(int argc, char* argv[], TaskFile &taskFile, int opperation){
     if (argc == 3){
@@ -55,11 +56,11 @@ void callTaskOpperation(int argc, char* argv[], TaskFile &taskFile, int opperati
             // run the opperation
             switch(opperation){
                 case TaskOpperations::complete:
-                    taskFile.completeTask(taskIndex);
+                    taskFile.completeTask(taskIndex-1);
                     std::cout << "Task has been succesfully marked complete" << std::endl;
                     break;
                 case TaskOpperations::erase:
-                    taskFile.removeTask(taskIndex);
+                    taskFile.removeTask(taskIndex-1);
                     break;
             }
             taskFile.write();
@@ -73,9 +74,24 @@ void callTaskOpperation(int argc, char* argv[], TaskFile &taskFile, int opperati
         std::cout << "Opperation takes exactly one argument" << std::endl;
     }
 }
+
+// display a help dialog
 void showHelp(){
-    std::cout << "This should show the help dialog." << std::endl;
+    std::cout << "usage: task <command>:";
+    std::string entries[] = {
+                            "tasks view: displays the current tasks, their names, and if they're complete or not.",
+                            "tasks new [task name] [(optionalg) --groupname=]: creates a new task of a specified name. A group may be specifed as well.",
+                            "tasks complete [task ID]: marks the task with a given ID complete.",
+                            "tasks delete [task ID]: deletes the tasks with a given ID",
+                            "tasks delete-complete: deletes all completed tasks from the list",
+    };
+    for (int i = 0; i < (sizeof(entries) / sizeof(std::string)); i++){
+        std::cout << "\n\t" << entries[i];
+    }
+    std::cout << std::endl;
+   
 }
+
 int main(int argc, char* argv[]){
     // get the user's home directory
     struct passwd* pw = getpwuid(getuid());
@@ -85,7 +101,7 @@ int main(int argc, char* argv[]){
     taskFile.read();
     // determine the user's action
     if (argc < 2){
-        std::cout << "Please provide at least one argument" << std::endl;
+        std::cout << "Please provide at least one argument or run tasks help for a list of available commands" << std::endl;
         return 0;
     }
     std::string command = argv[1];
@@ -120,6 +136,14 @@ int main(int argc, char* argv[]){
     }
     else if (command == "delete"){
        callTaskOpperation(argc, argv, taskFile, TaskOpperations::erase);
+    }
+    else if (command == "delete-complete"){
+        taskFile.removeComplete();
+        taskFile.write();
+        std::cout << "All completed tasks have been deleted." << std::endl;
+    }
+    else{
+        std::cout << "Unrecognized command \"" << argv[1] << "\"\nFor a list of available commands, please run tasks help" << std::endl;
     }
     return 0;
 }
