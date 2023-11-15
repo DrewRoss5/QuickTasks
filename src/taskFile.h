@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 #include "task.h"
 
@@ -23,6 +24,14 @@ class TaskFile{
         void removeTask(int taskIndex){
             taskList.erase(taskList.begin()+taskIndex);
         }
+        // removes every complete task
+        void removeComplete(){
+            for (int i = 0; i < taskList.size(); i++){
+                if (taskList[i]->getComplete()){
+                    taskList.erase(taskList.begin()+i);
+                }
+            }
+        }
         // marks a task complete given its index
         void completeTask(int taskIndex){
             taskList[taskIndex]->markComplete();
@@ -30,18 +39,30 @@ class TaskFile{
         // prints each task's name, completion status, and group if applicable
         void listTasks(){
             Task* task;
+            std::string completeChar;
             std::string groupName;
             std::vector<int>::size_type size = taskList.size();
             // ensure that the task list has been initalized
             if(size > 0){
+                int completeCount = 0;
                 std::cout << "Tasks:\n";
+                // display each task, and increment the count of complete tasks
                 for (int i = 0; i < size; i++){
-                    task = taskList[i];
-                    std::string completeChar = (task->getComplete()) ? "✔" : "✖";
+                    task = taskList[i]; 
+                    if (task->getComplete()){
+                        completeCount += 1;
+                        completeChar =  "✔";
+                    }
+                    else{
+                        completeChar = "✖";
+                    }
                     groupName = task->getGroup();
                     std::string groupString = (groupName != "") ?  std::format("\n\t\tGroup: {}", task->getGroup()) : "";
                     std::cout << std::format("\t{}:  {} {}{}\n", i, task->getName(), completeChar, groupString);
                 }
+                // calculate and display the percentage of completed tasks to the nearest whole percent
+                int completePercent = std::ceil(completeCount * 100 /taskList.size());
+                std::cout << completePercent << "% of your tasks are complete" << std::endl;
             }
             else{
                 std::cout << "There's nothing on your ToDo list." << std::endl;
