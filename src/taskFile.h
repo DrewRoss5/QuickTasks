@@ -26,11 +26,14 @@ class TaskFile{
         }
         // removes every complete task
         void removeComplete(){
-            for (int i = 0; i < taskList.size(); i++){
-                if (taskList[i]->getComplete()){
-                    taskList.erase(taskList.begin()+i);
+            std::vector<Task*> newTasks;
+            int initSize = taskList.size();
+            for (int i = 0; i < initSize; i++){
+                if (!(taskList[i]->getComplete())){
+                    newTasks.push_back(taskList[i]);
                 }
             }
+            taskList = newTasks;
         }
         // marks a task complete given its index
         void completeTask(int taskIndex){
