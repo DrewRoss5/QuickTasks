@@ -1,5 +1,5 @@
 # QuickTasks
-A simple CLI ToDo utility made to learn C++
+A Linux CLI ToDo utility made to learn C++
 
 # Installation
 Clone this repo, and run the install.sh bash script from the repo, this will complile the source code, and add the ``tasks`` binary to your /usr/bin/ directory.
