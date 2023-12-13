@@ -1,59 +1,28 @@
+#ifndef TASK_H
+#define TASK_H
+
 #include <format>
 #include <string>
 
-
 class Task{
     private: 
-        std::string name;
-        std::string group;
-        bool complete;
+        std::string name_;
+        std::string group_;
+        bool complete_;
+    
     public:
-        // primary constructor
-        Task(std::string _name, std::string _group){
-            name = _name;
-            group = _group;
-            complete = false;
-        }
-        // construct the task from the string
-        static Task* fromString(std::string str){
-            std::string taskName;
-            std::string taskGroup;
-            bool complete = (str[0] == (char) *"1") ? true : false;
-            int delimPos = str.find('@'); // the location of the @ delimeter for task groups
-            if(delimPos > 0){
-                // parse the task's name and group based on the @ delimeter
-                taskName = str.substr(1, delimPos-1);
-                taskGroup = str.substr(delimPos+1, str.length()-1);
-            }
-            else{
-                taskName = str.substr(1, str.length()-1);
-            }
-            Task* task = new Task(taskName, taskGroup);
-            if (complete){
-                task->markComplete();
-            }
-            return task;
-        }
-        // converts the task into a string to be saved into the ToDo file
-        std::string toString(){
-            std::string groupStr = (group != "") ? std::format("@{}", group) : "";
-            return std::format("{}{}{}", (int) complete, name, groupStr);
-        }
+        Task(std::string name, std::string group);
+        static Task* fromString(std::string str);
+        std::string toString();
+        void markComplete();
+        void setGroup(std::string newGroup);
         // setter functions
-        void markComplete(){
-            complete = true;
-        }
-        void setGroup(std::string newGroup){
-            group = newGroup;
-        }
+        void markComplete(){complete_ = true;}
+        void setGroup(std::string newGroup){group_ = newGroup;}
         // getter functions
-        std::string getName(){
-            return name;
-        }
-        std::string getGroup(){
-            return group;
-        }
-        bool getComplete(){
-            return complete;
-        }
+        std::string getName(){return name_;}
+        std::string getGroup(){return group_;}
+        bool getComplete(){return complete_;}
 };
+
+#endif
