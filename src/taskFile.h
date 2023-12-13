@@ -14,7 +14,7 @@ class TaskFile{
         std::vector<Task*> taskList_;
        
     public:
-        TaskFile(std::string path){ filePath_ = path}
+        TaskFile(std::string path){filePath_ = path;}
         void createTask(std::string taskName, std::string taskGroup);
         void removeTask(int taskIndex);
         void removeComplete();
